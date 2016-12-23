@@ -1,0 +1,26 @@
+#!/usr/bin/expect
+
+set timeout 60
+
+set password [lindex $argv 2] 
+set username [lindex $argv 1]
+set target [lindex $argv 0]
+
+if {$argc != 3} {
+    send_user "Input Params Error!\n"
+    exit
+}
+
+if {$username == "root"} {
+    set homepath /root
+} else {
+    set homepath /home/$username
+}
+spawn ssh $username@$target mv -f $homepath/.ssh/authorized_keys_bk $homepath/.ssh/authorized_keys
+expect {
+    "password:" {
+        send "$password\n"
+        exp_continue
+    }
+}
+
