@@ -32,6 +32,15 @@ if {$localuser == "root"} {
 send_user "$homepath\n"
 send_user "$localhomepath\n"
 
+# create .ssh directory
+spawn ssh $username@$target mkdir -p $homepath/.ssh/
+expect {
+    "password:" {
+        send "$password\n"
+        exp_continue
+    }
+}
+
 # backup target authorized_keys
 spawn ssh $username@$target touch $homepath/.ssh/authorized_keys_bk
 expect {
